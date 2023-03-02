@@ -21,12 +21,14 @@
   },
   "homepage": "https://github.com/project-magneto/backend#readme",
   "devDependencies": {
+    "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/pg": "^8.6.6",
     "ts-node-dev": "^2.0.0",
     "typescript": "4.9.5"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "4.18.2",
     "joi": "^17.8.3",
