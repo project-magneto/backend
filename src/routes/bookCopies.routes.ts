@@ -1,27 +1,27 @@
 import express, { Request, Response } from 'express';
 import Joi from 'joi';
 import { 
-    User,
-    getAllUsers,
-    getUserById,
-    createUser,
-    updateUser
-} from '../controllers/users.controller';
+    BookCopy,
+    getAllBookCopies,
+    getBookCopyById,
+    createCopyBook,
+    updateBookCopy
+} from '../controllers/bookCopies.controller';
 
 const router = express.Router();
 
-const userSchema = Joi.object({
-    first_name: Joi.string().required(),
-    last_name: Joi.string().required(),
-    email: Joi.string().email().required(),
-    address: Joi.string().required(),
+const bookCopiesSchema = Joi.object({
+    title: Joi.string().required(),
+    author: Joi.string().required(),
+    editorial: Joi.string().required(),
+    edition: Joi.string().required(),
     status: Joi.boolean(),
 });
 
 router.get('/', async (_req: Request, res: Response) => {
     try {
-        const users = await getAllUsers();
-        res.status(200).json(users);
+        const bookCopies = await getAllBookCopies();
+        res.status(200).json(bookCopies);
     } catch (err) {
         if (err instanceof Error) {
             res.status(500).json({ message: err.message });
@@ -34,11 +34,11 @@ router.get('/', async (_req: Request, res: Response) => {
 router.get('/:id', async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id, 10);
-        const user = await getUserById(id);
-        if (!user) {
-            res.status(404).json({ message: `User with ID ${id} not found` });
+        const bookCopy = await getBookCopyById(id);
+        if (!bookCopy) {
+            res.status(404).json({ message: `Book copy with ID ${id} not found` });
         } else {
-            res.status(200).json(user);
+            res.status(200).json(bookCopy);
         }
     } catch (err) {
         if (err instanceof Error) {
@@ -51,16 +51,16 @@ router.get('/:id', async (req: Request, res: Response) => {
 
 router.post('/', async (req: Request, res: Response) => {
     try {
-        const { first_name, last_name, email, address, status } = req.body;
+        const { title, author, editorial, edition, status } = req.body;
 
-        const { error } = userSchema.validate({ first_name, last_name, email, address, status });
+        const { error } = bookCopiesSchema.validate({ title, author, editorial, edition, status });
         if (error) {
             return res.status(400).json({ message: error.details[0].message });
         }
 
-        const newUser: User = { first_name, last_name, email, address, status };
-        const createdUser = await createUser(newUser);
-        res.status(201).json(createdUser);
+        const newCopyBook: BookCopy = { title, author, editorial, edition, status };
+        const createdBookCopy = await createCopyBook(newCopyBook);
+        res.status(201).json(createdBookCopy);
     } catch (err) {
         if (err instanceof Error) {
             res.status(500).json({ message: err.message });
@@ -73,17 +73,17 @@ router.post('/', async (req: Request, res: Response) => {
 router.patch('/:id', async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id, 10);
-        const { first_name, last_name, email, address, status } = req.body;
+        const { title, author, editorial, edition, status } = req.body;
 
-        const { error } = userSchema.validate({ first_name, last_name, email, address, status });
+        const { error } = bookCopiesSchema.validate({ title, author, editorial, edition, status });
         if (error) {
             return res.status(400).json({ message: error.details[0].message });
         }
 
-        const updatedUser: User = { first_name, last_name, email, address, status };
-        const result = await updateUser(id, updatedUser);
+        const updatedBookCopy: BookCopy = { title, author, editorial, edition, status };
+        const result = await updateBookCopy(id, updatedBookCopy);
         if (!result) {
-            res.status(404).json({ message: `User with ID ${id} not found` });
+            res.status(404).json({ message: `Book copy with ID ${id} not found` });
         } else {
             res.status(200).json(result);
         }
