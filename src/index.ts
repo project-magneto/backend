@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { bookCopies, usersRoutes } from './routes';
+import { booksRoutes, bookCopiesRoutes, usersRoutes } from './routes';
 
 const app = express();
 
@@ -9,7 +9,8 @@ app.use(express.urlencoded({extended: false}));
 
 const PORT = 3000;
 
+app.use('/api/books', booksRoutes);
+app.use('/api/bookCopies', bookCopiesRoutes);
 app.use('/api/users', usersRoutes);
-app.use('/api/bookCopies', bookCopies);
 
 app.listen(PORT, () => console.log(`||SERVER||${PORT}`));
